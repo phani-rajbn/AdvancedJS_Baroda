@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Rest Client Program</title>
+	<style type="text/css">
+		*{
+			text-align: center;padding: 5px;
+		}
+		div{
+			display: inline-block;
+			margin: 5px;
+			border-color: red;
+			border: 2px solid blue;
+			border-radius: 15px;
+		}
+		.menu{
+			background-color:green;
+		}
+	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		//$ means short form of jQuery lib. 
+		//$ takes the arg of a selector which could be an element, id or a classname. U also have query selectors on which U could find the specific element. jQuery is a lib for creating DOM based Manipulations within min code and more features.
+		//jQuery uses JS for its coding. Its not a language enhancement, its rather a set of APIs used to do powerfull tasks with min code.
+		//ready is an event handler which is invoked when the document is loaded into the browser. The callback function is passed as argument. The callback function is somthing that is invoked when an action or an event is performed by the external user.
+		var url = "http://localhost:3000/data";
+		function populateRecords(){
+			$("table").find("tr:gt(1)").remove();
+			$.get(url, (data)=>{
+				$.each(data, (i, v)=>{
+					var row = "<tr><td>" + v.EmpName +"</td><td>";
+					row += v.EmpAddress +"</td><td>";	
+					row += v.EmpPhone +"</td><td>";
+					row += "<a href='#' class='edit' empName = '" + v.EmpName +"'>Edit</a></td></tr>";
+					$("table").append(row);	
+					
+				});
+				$(".edit").click(function(){
+						var name = $(this).parent().siblings().first().text();
+						var address= $(this).parent().siblings().first().next().text();
+						var phone = $(this).parent().siblings("td:eq(2)").text();
+						$("#txtName").val(name);
+						$("#txtAddress").val(address);
+						$("#txtPhone").val(phone);
+						$("section").hide(2000);
+						$("section:eq(2)").show(2000);	
+					})
+			})
+		}
+		function postData(){
+			var emp = {};
+			emp.EmpName = $("#txtNewName").val();
+			emp.EmpAddress = $("#txtNewAddress").val();
+			emp.EmpPhone = $("#txtNewPhone").val();
+			$.post(url, emp, (success)=>{
+				alert("Employee added successfully");
+				$("section").hide(2000);
+			})
+		}
+		function showRegistration() {
+			$("section").hide(2000);
+			$("section:eq(1)").show(2000);
+			$("button:eq(0)").click(postData);
+		}
+
+		function showTable(){
+			$("section").first().show(1000);
+			populateRecords();
+		}
+		function init(){
+			$("section").hide(2000);
+			$("a:eq(0)").click(showTable);
+			$("a:eq(1)").click(showRegistration);
+			$("a:eq(2)").click(showDeletion);
+		}  
+		$(document).ready(()=>{
+			//features();
+			init();
+		})
+		function features() {
+			$("h1:eq(0)").text("jQuery Works!");//selecting h1 of the document.
+			$("h1:gt(0)").text("Sub Heading!!!")
+			$("h1:gt(0)").mouseover(function(){
+				$(this).css("background-color", "blue");
+			})
+			$("h1:gt(0)").mouseleave(function(){
+				$(this).css("background-color", "white");
+			})
+			$("div").click(function(){
+				$(this).slideToggle(2000);
+			}) 
+		}
+	</script>
+</head>
+<body>
+		<div>
+			<h1>Rest Client for JSON server</h1>
+		</div>
+		<hr/>
+		<nav style="background-color: yellow; color:gold">
+			<a class="menu" href="#">Show All</a>
+			<a class="menu" href="#">Add New</a>
+			<a class="menu" href="#">Delete</a>
+		</nav>
+		<section>
+			<table border="1">
+				<tr>
+					<th colspan="4">
+					 		<h1>Table of Records</h1>
+					</th>
+				</tr>
+				<tr>
+					<th>Employee Name</th>
+					<th>Employee Address</th>
+					<th>Employee Phone</th>
+					<th>Options</th>
+				</tr>
+			</table>	
+		</section>
+		<section>
+			<h1>Employee Registration</h1>
+			<p><input placeholder="Employee Name" id="txtNewName"></p>
+			<p><input placeholder="Employee Address" id="txtNewAddress"></p>
+			<p><input placeholder="Employee Phone" id="txtNewPhone"></p>
+			<p><button>Register</button></p>
+		</section>
+		<section>
+			<h1>Employee Removal</h1>
+			<p><input placeholder="Employee Name" id="txtName"></p>
+			<p><input placeholder="Employee Address" id="txtAddress"></p>
+			<p><input placeholder="Employee Phone" id="txtPhone"></p>
+			<p><button>Save changes</button></p>
+		</section>
+		<hr/>
+		<p>@Powered by jQuery 3.14</p>
+	</body>
+	</body>
+</body>
+</html>

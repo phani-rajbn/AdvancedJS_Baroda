@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Customer Database</title>
+	<style type="text/css">
+		*{
+			background-color: lightblue;
+			color:blue;
+			margin: 5px;
+			padding: 5px; 
+		}
+		nav{
+			background-color: darkblue;
+			margin: 15px;
+			padding: 10px;
+			text-align: center;
+		}
+		a{
+			background-color: gold;
+			margin: 15px;
+			padding: 10px;	
+		}
+		div{
+			display: inline-block;
+			width: 40%;
+			vertical-align: top
+		}
+	</style>
+</head>
+<body>
+	<h1>Customer Management Software</h1>
+	<script src="Classes.js"></script>
+	<script src="Common.js"></script>
+	<script type="text/javascript">
+		let db = new CustomerRepository();
+		function update() {
+			let cst = new Customer(0, "", "");
+			cst.cstId = $("txtId").value;
+			cst.cstName = $("txtName").value;
+			cst.cstAddress = $("txtAddress").value;
+			db.updateCustomer(cst);
+			$hideAll("div");
+			alert("Customer updated Successfully")
+		}
+		function populateRecords() {
+			$("divTable").style.display ="block";
+			$("tblRecords").innerHTML = "<tr><th>Customer ID</th><th>Customer Name</th><th>Customer Address</th><th>Options</th></tr>"
+			var data = db.getAllCustomers();
+			data.forEach(function(element, index) {
+				let tr = '<tr><td>' + element.cstId +'</td><td>';
+				tr += element.cstName + '</td><td>';
+				tr += element.cstAddress +'</td><td>';
+				tr += '<a href="#" class="Edit" cstId=' + element.cstId + '>Edit</a></td></tr>';
+				$("tblRecords").innerHTML += tr;
+				$mapClickEvent("Edit" , function(){
+					let id = (this.getAttribute("cstId"));
+					let selected = db.getAllCustomers().find(function(value){
+						return value.cstId == id
+					});
+					if(selected != undefined){
+						$("txtId").value = selected.cstId;
+						$("txtName").value = selected.cstName;
+						$("txtAddress").value = selected.cstAddress;
+						$hideAll("div");
+						$("divUpdate").style.display = 'block';
+					}
+				});
+			});
+
+		}
+		function init(){
+			$hideAll("div");
+			$click("aDisplay", populateRecords);
+			$click("btnSave", update);
+
+		}
+		window.addEventListener("load", init);
+	</script>
+	<nav>
+		<a id="aDisplay" href="#">Display All</a>
+		<a href="#">Register New</a>
+	</nav>
+	<hr/>
+	<div id="divTable">
+		<h1>List of Customers</h1>
+		<table id="tblRecords" border="1">
+			
+		</table>
+	</div>
+		
+	<div>
+		<h1>Register for new Customer</h1>
+		<p><input type="number" id="txtNewId" placeholder="Enter the ID"></p>
+		<p><input id="txtNewName" placeholder="Enter the Name"></p>
+		<p><input id="txtNewAddress" placeholder="Enter the Address"></p>
+		<p><button id="btnRegister">Register</button>
+	</div>
+	<div id="divUpdate">
+		<h1>Update for the current Customer</h1>
+		<p><input type="number" id="txtId" placeholder="Enter the ID"></p>
+		<p><input id="txtName" placeholder="Enter the Name"></p>
+		<p><input id="txtAddress" placeholder="Enter the Address"></p>
+		<p><button id="btnSave">Save</button>
+	</div>
+</body>
+</html>

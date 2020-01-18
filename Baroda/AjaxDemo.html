@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ajax Calling Example</title>
+	<script src="Common.js"></script>
+</head>
+<body>
+	<h1>Important Verses in Bhagawad Gita</h1>
+	<hr/>
+	<form>
+		<select id="selector">
+			<option>Verse 1</option>
+			<option>Verse 2</option>
+			<option>Verse 3</option>
+			<option>Verse 4</option>
+		</select>
+	</form>
+	<h2>Sloka:</h2>
+	<div id="pre" style="width: 65%; height: 350px">
+
+	</div>
+	<script>
+		function updateDisplay(selected){
+			selected = selected.replace(" ", "");
+			selected = selected + ".txt";
+			var url = selected;
+			var req = new XMLHttpRequest();
+			req.open("GET", url);
+			req.onload = ()=>{
+				$("pre").innerText = req.response;
+			}
+			req.send();
+		}
+		function init() {
+			$("selector").onchange = function(){
+				var selected = $("selector").value;
+				updateDisplay(selected); 	
+			}
+		}
+		window.addEventListener("load", init);
+	</script>
+</body>
+</html>

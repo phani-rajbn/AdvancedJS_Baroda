@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="Common.js"></script>
+	<script>
+		function init(){
+			let worker = new Worker("workerExample.js");
+			worker.onmessage = function(res){
+				$("data").innerText = res.data;
+			}
+		}
+		window.addEventListener("load", ()=>{
+			$click("btnClick", init);
+		});
+	</script>
+	<title>Worker Threads</title>
+</head>
+<body>
+	<h1>Multi Threading in HTML</h1>
+	<button id="btnClick">Invoke Thread</button>
+	<ul id="data"/>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		var url = "http://localhost:3000/data";
+		var func = async function(){
+			let res = await fetch(url);
+			if(res.ok){
+				let json = await res.json();
+				return json;
+			}else 
+			throw "OOPS! Something wrong happened";
+		}
+		$(document).ready(()=>{
+			func().then((res)=>{
+				$.each(res, (i, v)=>{
+					var row = "<tr><td>" + v.EmpName +"</td><td>";
+					row += v.EmpAddress +"</td><td>";	
+					row += v.EmpPhone +"</td><td>";
+					row += "<a href='#' class='edit' empName = '" + v.EmpName +"'>Edit</a></td></tr>";
+					$("table").append(row);	
+					
+				});
+			}).catch((msg)=>{
+				console.log(msg);
+			})
+		})
+	</script>
+<section>
+	<table border="1">
+		<tr>
+			<th colspan="4">
+			 		<h1>Table of Records</h1>
+			</th>
+		</tr>
+		<tr>
+			<th>Employee Name</th>
+			<th>Employee Address</th>
+			<th>Employee Phone</th>
+			<th>Options</th>
+		</tr>
+	</table>	
+</section>
